@@ -1,0 +1,111 @@
+* {
+    font-family: 'Ubuntu', sans-serif;
+}
+
+
+#firstsection h1 {
+    margin: 8rem 15rem 2rem;
+    font-size: 200%;
+}
+
+#secondsection .container {
+    width: 70%;
+    margin: auto;
+    margin-top: 2rem;
+    padding: 1rem;
+    height: 15rem;
+    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+    display: flex;
+    justify-content: center;
+}
+
+#secondsection .container .left {
+    width: 45%;
+    height: 23vh;
+    padding-top: 1rem;
+    padding-right: 1.5rem;
+}
+
+#secondsection .container .right {
+    width: 90%;
+}
+
+#secondsection .container img {
+    width: 75%;
+}
+
+.container .btn {
+    display: block;
+    margin-top: 1.5rem;
+}
+
+.container a {
+    text-decoration: none;
+}
+
+.container .btn {
+    padding: 0.5rem 0;
+    font-size: 110%;
+    background: #e31818;
+    cursor: pointer;
+    border: none;
+    color: white;
+    width: 30%;
+    margin-top: 1.5rem;
+    border-radius: 4rem;
+    transition: background 0.3s ease-in-out;
+}
+
+.btn:hover {
+    background: #fb5656;
+}
+
+
+@media only screen and (max-width: 950px) {
+    #firstsection h1 {
+        margin: 2rem 7rem 2rem;
+        font-size: 180%;
+    }
+
+    #secondsection .container {
+        flex-direction: column;
+        align-items: center;
+        height: 65vh;
+        width: 55%;
+    }
+
+    .container .btn {
+        margin: auto;
+        margin-top: 1.5rem;
+        padding: 1rem;
+        width: 55%;
+    }
+
+    #secondsection .container .left {
+        height: 35%;
+        width: 50%;
+    }
+
+    #secondsection .container img {
+        width: 100%;
+    }
+}
+
+
+@media only screen and (max-width: 580px) {
+    #firstsection h1 {
+        margin: 2rem 8rem 2rem;
+    }
+
+    #secondsection .container{
+        width: 80%;
+    }
+}
+
+
+@media only screen and (max-width: 580px) {
+    #firstsection h1 {
+        margin: 2rem 4rem 2rem;
+        font-size: 160%;
+    }
+}
