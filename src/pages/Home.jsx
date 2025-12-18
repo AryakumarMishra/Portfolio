@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
-
 import { useTheme } from '../context/ThemeContext';
+import NeuralBackground from '../components/NeuralBackground';
 
 const Home = () => {
     const { isDark } = useTheme();
@@ -33,7 +33,10 @@ const Home = () => {
     };
 
     return (
-        <section id="home" className="flex flex-col justify-center items-center min-h-screen pt-16 text-center">
+        <section id="home" className="relative flex flex-col justify-center items-center min-h-screen pt-16 text-center overflow-hidden">
+            {/* Unique Interactive Background */}
+            <NeuralBackground />
+
             <motion.div
                 variants={container}
                 initial="hidden"
@@ -72,8 +75,8 @@ const Home = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 2.8, duration: 0.8 }}
                 className={`group relative px-8 py-3 rounded-full font-medium transition-all hover:scale-105 active:scale-95 flex items-center gap-2 ${isDark
-                        ? 'bg-white/10 text-white border border-white/20 hover:bg-white/20'
-                        : 'bg-black/5 text-gray-900 border border-black/10 hover:bg-black/10'
+                    ? 'bg-white/10 text-white border border-white/20 hover:bg-white/20'
+                    : 'bg-black/5 text-gray-900 border border-black/10 hover:bg-black/10'
                     }`}
             >
                 View Projects

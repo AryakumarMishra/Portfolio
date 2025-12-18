@@ -1,7 +1,7 @@
-import { motion, useMotionTemplate, useMotionValue, AnimatePresence } from 'framer-motion';
+import { motion, useMotionTemplate, useMotionValue, AnimatePresence, useSpring, useScroll, useTransform } from 'framer-motion';
 import { ExternalLink, Github, Info } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const projects = [
     {
@@ -72,15 +72,56 @@ const Toast = ({ message, onClose, isDark }) => {
     );
 };
 
-const Card = ({ project, index, onShowToast }) => {
+// Updated Card to accept scrollYProgress for Center Focus Logic
+const Card = ({ project, index, onShowToast, scrollYProgress }) => {
     const { isDark } = useTheme();
-    let mouseX = useMotionValue(0);
-    let mouseY = useMotionValue(0);
+
+    // Calculate trigger points for this specific card
+    // The gallery moves horizontally based on vertical scroll.
+    // We adjust these "peaks" to perfectly time the pop-up effect.
+    // 0.0 = Title Section
+    // 0.2 = First Card
+    // ... increments of ~0.20
+    const peak = 0.20 + (index * 0.20);
+    const range = [peak - 0.15, peak, peak + 0.15];
+
+    // Dynamic styles based on scroll position
+    const cardScale = useTransform(scrollYProgress, range, [0.9, 1.1, 0.9]);
+    const cardOpacity = useTransform(scrollYProgress, range, [0.5, 1, 0.5]);
+    const zIndex = useTransform(scrollYProgress, range, [1, 10, 1]); // Bring active card to front
+
+    // 3D Motion Values (Mouse interaction still active!)
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+
+    // Smooth springs for rotation
+    const rotateX = useSpring(useMotionValue(0), { stiffness: 100, damping: 30 });
+    const rotateY = useSpring(useMotionValue(0), { stiffness: 100, damping: 30 });
 
     function handleMouseMove({ currentTarget, clientX, clientY }) {
-        let { left, top } = currentTarget.getBoundingClientRect();
-        mouseX.set(clientX - left);
-        mouseY.set(clientY - top);
+        const { left, top, width, height } = currentTarget.getBoundingClientRect();
+
+        const relativeX = clientX - left;
+        const relativeY = clientY - top;
+
+        x.set(relativeX);
+        y.set(relativeY);
+
+        const offsetY = relativeY - height / 2;
+        const offsetX = relativeX - width / 2;
+
+        const rX = (offsetY / 40) * -1;
+        const rY = offsetX / 40;
+
+        rotateX.set(rX);
+        rotateY.set(rY);
+    }
+
+    function handleMouseLeave() {
+        x.set(0);
+        y.set(0);
+        rotateX.set(0);
+        rotateY.set(0);
     }
 
     const handleDemoClick = (e) => {
@@ -90,36 +131,33 @@ const Card = ({ project, index, onShowToast }) => {
         }
     };
 
-    // Select the correct color string based on theme
     const themeColor = isDark ? project.colors.dark : project.colors.light;
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{
-                duration: 0.8,
-                ease: [0.22, 1, 0.36, 1],
-                delay: index * 0.1
-            }}
-            viewport={{ once: true, margin: "-10%" }}
-            onMouseMove={handleMouseMove}
-            // Dynamic border and background styles
-            className={`group relative w-full rounded-2xl border overflow-hidden mb-8 sticky transition-all duration-300
-                ${isDark ? `bg-[#0a0a0a] ${themeColor.split(' ').pop()}` : `bg-white shadow-xl ${themeColor.split(' ').pop()}`}
-            `}
-            // Sticky stacking logic
             style={{
-                top: `${120 + index * 40}px`
+                scale: cardScale,
+                opacity: cardOpacity,
+                zIndex: zIndex,
+                // Retain 3D transforms
+                rotateX,
+                rotateY,
+                transformStyle: "preserve-3d",
+                transformPerspective: 1000,
             }}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            className={`group relative h-[60vh] w-[85vw] md:w-[60vw] lg:w-[45vw] flex-shrink-0 rounded-3xl border overflow-hidden transition-colors duration-300
+                ${isDark ? `bg-[#0a0a0a] ${themeColor.split(' ').pop()}` : `bg-white shadow-2xl ${themeColor.split(' ').pop()}`}
+            `}
         >
             {/* Mouse Spotlight Effect */}
             <motion.div
-                className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100"
+                className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100 z-10"
                 style={{
                     background: useMotionTemplate`
                         radial-gradient(
-                            650px circle at ${mouseX}px ${mouseY}px,
+                            800px circle at ${x}px ${y}px,
                             ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'},
                             transparent 80%
                         )
@@ -127,23 +165,25 @@ const Card = ({ project, index, onShowToast }) => {
                 }}
             />
 
-            {/* The Gradient Tint Layer */}
             <div className={`absolute inset-0 bg-gradient-to-br opacity-100 transition-colors duration-500 ${isDark ? '' : 'opacity-60'} ${themeColor.split(' border')[0]}`} />
 
-            <div className="relative p-8 md:p-10 flex flex-col md:flex-row gap-8">
-                <div className="flex-1">
+            <div
+                className="relative h-full p-8 md:p-12 flex flex-col justify-between"
+                style={{ transform: "translateZ(30px)" }}
+            >
+                <div>
                     <span className={`text-xs tracking-widest uppercase mb-4 block font-semibold ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                         {project.category}
                     </span>
-
-                    <h3 className={`text-3xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                    <h3 className={`text-3xl md:text-5xl font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                         {project.title}
                     </h3>
-
-                    <p className={`mb-6 leading-relaxed max-w-2xl ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <p className={`text-lg leading-relaxed max-w-2xl ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                         {project.description}
                     </p>
+                </div>
 
+                <div>
                     <div className="flex flex-wrap gap-2 mb-8">
                         {project.tags.map(tag => (
                             <span
@@ -167,7 +207,7 @@ const Card = ({ project, index, onShowToast }) => {
                             rel="noopener noreferrer"
                             className={`flex items-center gap-2 transition-colors font-medium cursor-pointer ${isDark ? 'hover:text-white text-gray-400' : 'hover:text-black text-gray-600'}`}
                         >
-                            <ExternalLink size={18} /> Live Demo
+                            <ExternalLink size={20} /> Live Demo
                         </a>
                         <a
                             href={project.links.github}
@@ -175,7 +215,7 @@ const Card = ({ project, index, onShowToast }) => {
                             rel="noopener noreferrer"
                             className={`flex items-center gap-2 transition-colors font-medium ${isDark ? 'hover:text-white text-gray-400' : 'hover:text-black text-gray-600'}`}
                         >
-                            <Github size={18} /> Source
+                            <Github size={20} /> Source
                         </a>
                     </div>
                 </div>
@@ -187,9 +227,17 @@ const Card = ({ project, index, onShowToast }) => {
 const Projects = () => {
     const { isDark } = useTheme();
     const [toastMessage, setToastMessage] = useState(null);
+    const targetRef = useRef(null);
+    const { scrollYProgress } = useScroll({ target: targetRef });
+
+    // Horizontal Scroll Transformation
+    // Moves from 0% to -X% where X depends on number of cards. 
+    // We have 4 cards + Title section.
+    const x = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"]);
 
     return (
-        <section id="projects" className="py-24 min-h-screen relative">
+        // Height 300vh allows enough space to scroll through the horizontal content
+        <section ref={targetRef} id="projects" className="relative h-[300vh]">
             <AnimatePresence>
                 {toastMessage && (
                     <Toast
@@ -200,36 +248,36 @@ const Projects = () => {
                 )}
             </AnimatePresence>
 
-            {/* CHANGED: Use grid-cols-4 instead of 3 to give cards more width (25% text / 75% cards) */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 max-w-[90rem] mx-auto px-4 md:px-8">
+            <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+                <motion.div style={{ x }} className="flex gap-12 px-12 md:px-24 items-center">
 
-                {/* Sticky Title Column */}
-                <div className="lg:col-span-1">
-                    <div className="sticky top-32">
-                        {/* CHANGED: Reduced text size from text-7xl to text-5xl */}
-                        <h2 className={`text-4xl md:text-5xl font-bold mb-6 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
+                    {/* Title Slide */}
+                    <div className="w-[80vw] md:w-[40vw] flex flex-col justify-center flex-shrink-0">
+                        <h2 className={`text-6xl md:text-8xl font-bold mb-8 leading-tight ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
                             Personal
                             <span className={`block ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>Projects</span>
                         </h2>
-                        <p className={`text-base max-w-[200px] leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                            A collection of projects exploring the boundaries of design and technology.
+                        <p className={`text-xl max-w-sm leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                            A curated collection of projects exploring the boundaries of AI, Design, and Engineering.
+                            <br /><br />
+                            <span className="text-sm opacity-50 flex items-center gap-2">SCROLL TO EXPLORE &rarr;</span>
                         </p>
                     </div>
-                </div>
 
-                {/* Cards Column */}
-                {/* CHANGED: Span 3 columns instead of 2 */}
-                <div className="lg:col-span-3">
+                    {/* Project Cards with Scroll-Aware Pop Logic */}
                     {projects.map((project, index) => (
                         <Card
                             key={index}
                             project={project}
                             index={index}
                             onShowToast={setToastMessage}
+                            scrollYProgress={scrollYProgress}
                         />
                     ))}
-                    <div className="h-[20vh]" />
-                </div>
+
+                    {/* Padding at end */}
+                    <div className="w-[10vw] flex-shrink-0" />
+                </motion.div>
             </div>
         </section>
     );
