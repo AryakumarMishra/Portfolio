@@ -9,7 +9,7 @@ const projects = [
         category: 'AI & Machine Learning',
         description: 'A Multi-Modal RAG System that can answer questions based on a combination of PDFs/Text, Images, and Audios.',
         tags: ['Python', 'Retrieval Augmented Generation', 'Natural Language Processing'],
-        links: { demo: '#', github: 'https://github.com/AryakumarMishra/Multimodal-RAG-Chatbot' },
+        links: { demo: 'https://multimodalapp.streamlit.app/', github: 'https://github.com/AryakumarMishra/Multimodal-RAG-Chatbot' },
         colors: {
             dark: 'from-blue-500/20 to-purple-500/20 border-blue-500/20',
             light: 'from-blue-100 to-purple-100 border-blue-200'
