@@ -14,9 +14,10 @@ const NeuralBackground = () => {
         let particles = [];
         let animationFrameId; // To stop animation on cleanup
 
-        // Configuration
-        const PARTICLE_COUNT = 60;
-        const CONNECTION_DISTANCE = 150;
+        // Configuration - Responsive
+        // Reduce load on mobile devices
+        let PARTICLE_COUNT = window.innerWidth < 768 ? 25 : 60;
+        let CONNECTION_DISTANCE = window.innerWidth < 768 ? 100 : 150;
         const MOUSE_DISTANCE = 200;
 
         // Mouse tracking
@@ -28,6 +29,11 @@ const NeuralBackground = () => {
             height = window.innerHeight;
             canvas.width = width;
             canvas.height = height;
+
+            // Adjust density on resize
+            PARTICLE_COUNT = width < 768 ? 25 : 60;
+            CONNECTION_DISTANCE = width < 768 ? 100 : 150;
+            init(); // Re-init particles to adjust count
         };
 
         // Particle Class

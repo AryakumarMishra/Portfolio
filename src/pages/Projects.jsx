@@ -72,33 +72,32 @@ const Toast = ({ message, onClose, isDark }) => {
     );
 };
 
-// Updated Card to accept scrollYProgress for Center Focus Logic
-const Card = ({ project, index, onShowToast, scrollYProgress }) => {
+const Card = ({ project, index, onShowToast, scrollYProgress, isMobile }) => {
     const { isDark } = useTheme();
 
-    // Calculate trigger points for this specific card
-    // The gallery moves horizontally based on vertical scroll.
-    // We adjust these "peaks" to perfectly time the pop-up effect.
-    // 0.0 = Title Section
-    // 0.2 = First Card
-    // ... increments of ~0.20
+    // Desktop: Calculate trigger points for Pop Effect
+    // Mobile: Disabled (returns constant 1)
+
+    // Compute peak based on index
     const peak = 0.20 + (index * 0.20);
     const range = [peak - 0.15, peak, peak + 0.15];
 
-    // Dynamic styles based on scroll position
-    const cardScale = useTransform(scrollYProgress, range, [0.9, 1.1, 0.9]);
-    const cardOpacity = useTransform(scrollYProgress, range, [0.5, 1, 0.5]);
-    const zIndex = useTransform(scrollYProgress, range, [1, 10, 1]); // Bring active card to front
+    // Transforms are only applied if scrollYProgress is provided (Desktop)
+    // If mobile, they default to "Active" state values for simplicity
+    const cardScale = scrollYProgress ? useTransform(scrollYProgress, range, [0.9, 1.1, 0.9]) : 1;
+    const cardOpacity = scrollYProgress ? useTransform(scrollYProgress, range, [0.5, 1, 0.5]) : 1;
+    const zIndex = scrollYProgress ? useTransform(scrollYProgress, range, [1, 10, 1]) : 1;
 
-    // 3D Motion Values (Mouse interaction still active!)
+    // 3D Motion Values
     const x = useMotionValue(0);
     const y = useMotionValue(0);
 
-    // Smooth springs for rotation
     const rotateX = useSpring(useMotionValue(0), { stiffness: 100, damping: 30 });
     const rotateY = useSpring(useMotionValue(0), { stiffness: 100, damping: 30 });
 
     function handleMouseMove({ currentTarget, clientX, clientY }) {
+        if (isMobile) return; // Disable 3D tilt on mobile
+
         const { left, top, width, height } = currentTarget.getBoundingClientRect();
 
         const relativeX = clientX - left;
@@ -118,6 +117,7 @@ const Card = ({ project, index, onShowToast, scrollYProgress }) => {
     }
 
     function handleMouseLeave() {
+        if (isMobile) return;
         x.set(0);
         y.set(0);
         rotateX.set(0);
@@ -136,40 +136,42 @@ const Card = ({ project, index, onShowToast, scrollYProgress }) => {
     return (
         <motion.div
             style={{
-                scale: cardScale,
-                opacity: cardOpacity,
-                zIndex: zIndex,
-                // Retain 3D transforms
-                rotateX,
-                rotateY,
+                scale: isMobile ? 1 : cardScale,
+                opacity: isMobile ? 1 : cardOpacity,
+                zIndex: isMobile ? 1 : zIndex,
+                rotateX: isMobile ? 0 : rotateX,
+                rotateY: isMobile ? 0 : rotateY,
                 transformStyle: "preserve-3d",
                 transformPerspective: 1000,
             }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            className={`group relative h-[60vh] w-[85vw] md:w-[60vw] lg:w-[45vw] flex-shrink-0 rounded-3xl border overflow-hidden transition-colors duration-300
+            className={`group relative flex-shrink-0 rounded-3xl border overflow-hidden transition-colors duration-300
+                ${isMobile ? 'w-[85vw] h-[55vh] mx-4 snap-center' : 'h-[60vh] w-[45vw]'}
                 ${isDark ? `bg-[#0a0a0a] ${themeColor.split(' ').pop()}` : `bg-white shadow-2xl ${themeColor.split(' ').pop()}`}
             `}
         >
-            {/* Mouse Spotlight Effect */}
-            <motion.div
-                className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100 z-10"
-                style={{
-                    background: useMotionTemplate`
-                        radial-gradient(
-                            800px circle at ${x}px ${y}px,
-                            ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'},
-                            transparent 80%
-                        )
-                    `,
-                }}
-            />
+            {/* Spotlight Effect (Desktop Only) */}
+            {!isMobile && (
+                <motion.div
+                    className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100 z-10"
+                    style={{
+                        background: useMotionTemplate`
+                            radial-gradient(
+                                800px circle at ${x}px ${y}px,
+                                ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'},
+                                transparent 80%
+                            )
+                        `,
+                    }}
+                />
+            )}
 
             <div className={`absolute inset-0 bg-gradient-to-br opacity-100 transition-colors duration-500 ${isDark ? '' : 'opacity-60'} ${themeColor.split(' border')[0]}`} />
 
             <div
                 className="relative h-full p-8 md:p-12 flex flex-col justify-between"
-                style={{ transform: "translateZ(30px)" }}
+                style={{ transform: isMobile ? "none" : "translateZ(30px)" }}
             >
                 <div>
                     <span className={`text-xs tracking-widest uppercase mb-4 block font-semibold ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
@@ -230,14 +232,25 @@ const Projects = () => {
     const targetRef = useRef(null);
     const { scrollYProgress } = useScroll({ target: targetRef });
 
-    // Horizontal Scroll Transformation
-    // Moves from 0% to -X% where X depends on number of cards. 
-    // We have 4 cards + Title section.
+    // Responsive Check
+    const [isMobile, setIsMobile] = useState(false);
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 1024); // Changed breakpoint to LG for better tablet handling
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    // Horizontal Scroll Transformation (Desktop only)
     const x = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"]);
 
     return (
-        // Height 300vh allows enough space to scroll through the horizontal content
-        <section ref={targetRef} id="projects" className="relative h-[300vh]">
+        <section
+            ref={targetRef}
+            id="projects"
+            // Mobile: Standard height / Desktop: 300vh track
+            className={`relative ${isMobile ? 'min-h-screen py-24' : 'h-[300vh]'}`}
+        >
             <AnimatePresence>
                 {toastMessage && (
                     <Toast
@@ -248,37 +261,68 @@ const Projects = () => {
                 )}
             </AnimatePresence>
 
-            <div className="sticky top-0 flex h-screen items-center overflow-hidden">
-                <motion.div style={{ x }} className="flex gap-12 px-12 md:px-24 items-center">
-
-                    {/* Title Slide */}
-                    <div className="w-[80vw] md:w-[40vw] flex flex-col justify-center flex-shrink-0">
-                        <h2 className={`text-6xl md:text-8xl font-bold mb-8 leading-tight ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
+            {isMobile ? (
+                // --- MOBILE LAYOUT (Native Scroll) ---
+                <div className="flex flex-col gap-8">
+                    <div className="px-6 mb-4">
+                        <h2 className={`text-4xl font-bold mb-4 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
                             Personal
                             <span className={`block ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>Projects</span>
                         </h2>
-                        <p className={`text-xl max-w-sm leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                            A curated collection of projects exploring the boundaries of AI, Design, and Engineering.
-                            <br /><br />
-                            <span className="text-sm opacity-50 flex items-center gap-2">SCROLL TO EXPLORE &rarr;</span>
+                        <p className={`text-base leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                            Swipe to explore my work &rarr;
                         </p>
                     </div>
 
-                    {/* Project Cards with Scroll-Aware Pop Logic */}
-                    {projects.map((project, index) => (
-                        <Card
-                            key={index}
-                            project={project}
-                            index={index}
-                            onShowToast={setToastMessage}
-                            scrollYProgress={scrollYProgress}
-                        />
-                    ))}
+                    <div className="flex overflow-x-auto snap-x snap-mandatory px-6 pb-12 gap-6 no-scrollbar">
+                        {projects.map((project, index) => (
+                            <Card
+                                key={index}
+                                project={project}
+                                index={index}
+                                onShowToast={setToastMessage}
+                                isMobile={true}
+                            />
+                        ))}
+                        {/* Spacer for end of scroll */}
+                        <div className="w-[10vw] flex-shrink-0" />
+                    </div>
+                </div>
+            ) : (
+                // --- DESKTOP LAYOUT (Sticky + Scroll Jack) ---
+                <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+                    <motion.div style={{ x }} className="flex gap-12 px-12 md:px-24 items-center">
 
-                    {/* Padding at end */}
-                    <div className="w-[10vw] flex-shrink-0" />
-                </motion.div>
-            </div>
+                        {/* Title Slide */}
+                        <div className="w-[40vw] flex flex-col justify-center flex-shrink-0">
+                            <h2 className={`text-8xl font-bold mb-8 leading-tight ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
+                                Personal
+                                <span className={`block ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>Projects</span>
+                            </h2>
+                            <p className={`text-xl max-w-sm leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                A curated collection of projects exploring the boundaries of AI, Design, and Engineering.
+                                <br /><br />
+                                <span className="text-sm opacity-50 flex items-center gap-2">SCROLL TO EXPLORE &rarr;</span>
+                            </p>
+                        </div>
+
+                        {/* Desktop Cards */}
+                        {projects.map((project, index) => (
+                            <Card
+                                key={index}
+                                project={project}
+                                index={index}
+                                onShowToast={setToastMessage}
+                                scrollYProgress={scrollYProgress}
+                                isMobile={false}
+                            />
+                        ))}
+
+                        {/* Padding at end */}
+                        <div className="w-[10vw] flex-shrink-0" />
+                    </motion.div>
+                </div>
+            )}
         </section>
     );
 };
