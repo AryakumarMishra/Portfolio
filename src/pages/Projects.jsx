@@ -5,6 +5,17 @@ import { useState, useEffect, useRef } from 'react';
 
 const projects = [
     {
+        title: 'Research Assistant',
+        category: 'AI & Machine Learning',
+        description: 'A RAG model helping with understanding Research Papers, and their content, findings, limitations, built with a purpose of assisting in research work in the field of Computer Science.',
+        tags: ['Python', 'Retrieval Augmented Generation', 'Natural Language Processing'],
+        links: { demo: '#', github: 'https://github.com/AryakumarMishra/CS-Research-Assistant' },
+        colors: {
+            dark: 'from-orange-500/20 to-red-500/20 border-orange-500/20',
+            light: 'from-orange-100 to-red-100 border-orange-200'
+        }
+    },
+    {
         title: 'Multi-Modal RAG System',
         category: 'AI & Machine Learning',
         description: 'A Multi-Modal RAG System that can answer questions based on a combination of PDFs/Text, Images, and Audios.',
