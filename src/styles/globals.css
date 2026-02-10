@@ -1,0 +1,126 @@
+:root {
+    scroll-behavior: smooth;
+
+    /* Shared Defaults */
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+/* Royal Midnight (Dark Mode) - DEFAULT */
+:root[data-theme='dark'] {
+    --bg-color: #0d0b1a;
+    /* Deep Indigo/Black */
+    --surface-color: #17132a;
+    /* Slightly lighter Indigo */
+    --primary-color: #d4af37;
+    /* Metallic Gold */
+    --secondary-color: #7b2cbf;
+    /* Royal Purple */
+    --tertiary-color: #240046;
+    /* Deep Violet */
+
+    --text-color: #e0d7ff;
+    /* Soft Lavender White */
+    --text-secondary: #9d94c0;
+    /* Muted Lavender Gray */
+
+    --accent-glow: 0 0 25px rgba(123, 44, 191, 0.4);
+    --border-color: rgba(123, 44, 191, 0.2);
+    /* Purple tint border */
+
+    --gradient-bg: radial-gradient(circle at 50% 0%, #240046 0%, #0d0b1a 60%);
+}
+
+/* Royal Porcelain (Light Mode) */
+:root[data-theme='light'] {
+    --bg-color: #f8f9fe;
+    /* Pale Lavender/White */
+    --surface-color: #ffffff;
+    /* Pure White */
+    --primary-color: #bfa15f;
+    /* Muted Gold (Darker for contrast) */
+    --secondary-color: #5b21b6;
+    /* Deep Violet */
+    --tertiary-color: #ddd6fe;
+    /* Soft Violet */
+
+    --text-color: #1a0b2e;
+    /* Deep Indigo (High Contrast) */
+    --text-secondary: #4c1d95;
+    /* Medium Violet/Indigo */
+
+    --accent-glow: 0 0 25px rgba(91, 33, 182, 0.15);
+    --border-color: rgba(91, 33, 182, 0.1);
+    /* Violet tint border */
+
+    --gradient-bg: radial-gradient(circle at 50% 0%, #ede9fe 0%, #f8f9fe 60%);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-body);
+    line-height: 1.8;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+    color: var(--text-color);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+}
+
+p {
+    color: var(--text-secondary);
+    /* Enforce text-secondary for paragraphs globally */
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+}
+
+/* Custom Scrollbar - Royal Purple */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
+
+/* Selection - Purple/Gold */
+::selection {
+    background: var(--secondary-color);
+    color: white;
+}

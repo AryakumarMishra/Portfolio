@@ -1,0 +1,114 @@
+.about {
+    padding: 120px 24px;
+    background-color: transparent;
+    color: var(--text-color);
+    position: relative;
+    transition: background-color 0.4s ease;
+}
+
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: 3.5rem;
+    text-align: center;
+    margin-bottom: 5rem;
+    font-weight: 500;
+    letter-spacing: -1px;
+    color: var(--text-color);
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 2px;
+    background: var(--primary-color);
+    margin: 20px auto 0;
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+}
+
+.about-text p {
+    margin-bottom: 2rem;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    line-height: 2;
+    font-weight: 400;
+}
+
+.highlight-text {
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+.tech-stack h3 {
+    margin-bottom: 2.5rem;
+    font-size: 1.2rem;
+    color: var(--text-color);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+    display: inline-block;
+}
+
+.stack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 1.5rem;
+}
+
+.stack-item {
+    background: var(--bg-color);
+    padding: 20px;
+    border-radius: 4px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.stack-item:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
+    box-shadow: var(--accent-glow);
+}
+
+.stack-icon {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    filter: grayscale(100%);
+    transition: filter 0.3s ease;
+}
+
+.stack-item:hover .stack-icon {
+    filter: grayscale(0%);
+}
+
+.stack-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stack-item:hover .stack-name {
+    color: var(--primary-color);
+}
+
+@media screen and (max-width: 960px) {
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+    }
+}

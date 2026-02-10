@@ -1,0 +1,196 @@
+.navbar {
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    font-family: var(--font-heading);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: rgba(var(--bg-color), 0.8);
+    /* This wont work directly with hex var, using surface-color with opacity fallback */
+    background: var(--surface-color);
+    opacity: 0.95;
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+/* Use a slightly transparent background for the glass effect if possible, 
+   but since vars are hex, we'll rely on surface color + opacity or just surface color */
+.navbar {
+    background-color: var(--bg-color);
+    /* Fallback */
+}
+
+@supports (backdrop-filter: blur(15px)) {
+    .navbar {
+        background: transparent;
+        /* create a pseudo or gradient to handle opacity if needed, 
+           or just rely on the body bg showing through blur */
+        background-color: rgba(255, 255, 255, 0.02);
+        /* Very subtle tint */
+    }
+
+    :root[data-theme='light'] .navbar {
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    :root[data-theme='dark'] .navbar {
+        background-color: rgba(13, 11, 26, 0.8);
+    }
+}
+
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 24px;
+}
+
+.navbar-logo {
+    color: var(--text-color);
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.dot {
+    color: var(--secondary-color);
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    list-style: none !important;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-item {
+    list-style: none !important;
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    position: relative;
+    font-family: var(--font-body);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--secondary-color);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.menu-icon {
+    display: none;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    font-size: 1.2rem;
+    background: transparent;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    /* Hidden by default */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.theme-toggle:hover {
+    background: var(--surface-color);
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
+    transform: rotate(15deg);
+    box-shadow: 0 0 15px var(--border-color);
+}
+
+@media screen and (max-width: 960px) {
+    .nav-menu {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+        height: 100vh;
+        position: absolute;
+        top: 80px;
+        left: -100%;
+        opacity: 1;
+        transition: all 0.5s ease;
+        background: var(--bg-color);
+    }
+
+    .nav-menu.active {
+        background: var(--bg-color);
+        left: 0;
+        opacity: 1;
+        z-index: 1;
+    }
+
+    .nav-link {
+        font-size: 1.2rem;
+        padding: 1.5rem;
+    }
+
+    .menu-icon {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translate(-100%, 60%);
+        font-size: 1.8rem;
+        cursor: pointer;
+        color: var(--text-color);
+    }
+
+    .bar {
+        width: 25px;
+        height: 2px;
+        background-color: var(--text-color);
+        margin: 6px auto;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .menu-icon.open .bar:nth-child(2) {
+        opacity: 0;
+    }
+
+    .menu-icon.open .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    .menu-icon.open .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+}
