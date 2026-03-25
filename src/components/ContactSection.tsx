@@ -20,13 +20,13 @@ const ContactSection = () => {
         </a>
 
         <div className="flex items-center justify-center gap-6 mt-12">
-          <a href="#" className="text-muted-foreground hover:text-foreground transition-colors" aria-label="GitHub">
+          <a href="https://github.com/AryakumarMishra" className="text-muted-foreground hover:text-foreground transition-colors" aria-label="GitHub">
             <Github className="w-5 h-5" />
           </a>
-          <a href="#" className="text-muted-foreground hover:text-foreground transition-colors" aria-label="LinkedIn">
+          <a href="https://www.linkedin.com/in/aryakumar-mishra-747a39256/" className="text-muted-foreground hover:text-foreground transition-colors" aria-label="LinkedIn">
             <Linkedin className="w-5 h-5" />
           </a>
-          <a href="mailto:aryakumar@example.com" className="text-muted-foreground hover:text-foreground transition-colors" aria-label="Email">
+          <a href="mailto:aryakumar.ajaymishra@gmail.com" className="text-muted-foreground hover:text-foreground transition-colors" aria-label="Email">
             <Mail className="w-5 h-5" />
           </a>
         </div>

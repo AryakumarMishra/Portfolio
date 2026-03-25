@@ -8,67 +8,39 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    title: "Sentiment Analysis Engine",
+    title: "FieldAssist AI",
     description:
-      "An NLP pipeline that classifies text sentiment using transformer-based models, trained on large-scale datasets with fine-tuned accuracy.",
-    tags: ["Python", "NLP", "Transformers", "BERT"],
-    github: "#",
+      'An "Offline-First" information system which can provide grounded information and guidance on Military Laws, Legal Systems, and TCCC Guidelines based on the official documents and rule books.',
+    tags: ['Python', 'Retrieval Augmented Generation', 'Natural Language Processing'],
+    github: "https://github.com/AryakumarMishra/FieldAssist-AI",
     live: null,
   },
   {
-    title: "Image Classification System",
-    description:
-      "A deep learning model for multi-class image classification using convolutional neural networks with data augmentation techniques.",
-    tags: ["PyTorch", "CNN", "Computer Vision"],
-    github: "#",
+    title: 'Multi-Modal RAG System',
+    description: 'A Multi-Modal RAG System that can answer questions based on a combination of PDFs/Text, Images, and Audios.',
+    tags: ['Python', 'Retrieval Augmented Generation', 'Natural Language Processing'],
+    github: "https://github.com/AryakumarMishra/Multimodal-RAG",
+    live: "https://multimodal-rag-teal.vercel.app/",
+  },
+  {
+    title: 'Multi-Modal Deepfake Detection',
+    description: 'A Multi-Modal Deepfake Detection system that can detect deepfakes in Images, Videos, as well as Audios.',
+    tags: ['Python', 'PyTorch', 'Computer Vision', 'Audio Processing'],
+    github: "https://github.com/AryakumarMishra/Multimodal-Deepfake-Detector",
+    live: "https://multimodal-deepfake-detector.vercel.app/",
+  },
+  {
+    title: 'AI Fraud Detection',
+    description: 'A Machine Learning model that can detect fraudulent credit card transactions.',
+    tags: ['Python', 'Machine Learning', 'XGBoost'],
+    github: "https://github.com/AryakumarMishra/ai-fraud-detection",
     live: null,
   },
   {
-    title: "ML Portfolio Dashboard",
-    description:
-      "An interactive dashboard to visualize model performance metrics, training curves, and experiment tracking for ML projects.",
-    tags: ["React", "Python", "Data Viz"],
-    github: "#",
-    live: "#",
-  },
-  {
-    title: "Chatbot with RAG",
-    description:
-      "A retrieval-augmented generation chatbot that answers domain-specific queries by combining vector search with LLM responses.",
-    tags: ["LangChain", "OpenAI", "FAISS", "Python"],
-    github: "#",
-    live: null,
-  },
-  {
-    title: "Object Detection API",
-    description:
-      "A REST API for real-time object detection in images and video streams, built with YOLOv8 and served via FastAPI.",
-    tags: ["YOLOv8", "FastAPI", "Computer Vision"],
-    github: "#",
-    live: null,
-  },
-  {
-    title: "Stock Price Predictor",
-    description:
-      "A time-series forecasting model using LSTM networks to predict stock price trends based on historical market data.",
-    tags: ["LSTM", "Keras", "Finance", "Python"],
-    github: "#",
-    live: null,
-  },
-  {
-    title: "Text Summarizer",
-    description:
-      "An abstractive text summarization tool powered by fine-tuned T5 models, capable of condensing long articles into concise summaries.",
-    tags: ["T5", "Hugging Face", "NLP"],
-    github: "#",
-    live: "#",
-  },
-  {
-    title: "Recommendation System",
-    description:
-      "A collaborative filtering recommendation engine for movies using matrix factorization and neural collaborative filtering.",
-    tags: ["Python", "Scikit-learn", "Deep Learning"],
-    github: "#",
+    title: 'AI Based Machine Failure Detection',
+    description: 'A machine learning project to predict industrial machine failures based on sensor data such as temperature, rotational speed, torque, and tool wear. This system aims to enable proactive maintenance, reduce unplanned downtime, and improve operational efficiency.',
+    tags: ['Python', 'Machine Learning', 'XGBoost'],
+    github: "https://github.com/AryakumarMishra/Machine-Failure-Prediction",
     live: null,
   },
 ];
