@@ -8,6 +8,14 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    title: "AI Research Assistant",
+    description:
+      'An AI Research Assistant that can perform live web searches, fetch research papers from arXiv, and summarize them.',
+    tags: ['Python', 'Agentic AI', 'Natural Language Processing'],
+    github: "https://github.com/AryakumarMishra/AI-Research-Assistant",
+    live: null,
+  },
+  {
     title: "FieldAssist AI",
     description:
       'An "Offline-First" information system which can provide grounded information and guidance on Military Laws, Legal Systems, and TCCC Guidelines based on the official documents and rule books.',
