@@ -13,7 +13,7 @@ export const projects: Project[] = [
       'An AI Research Assistant that can perform live web searches, fetch research papers from arXiv, and summarize them.',
     tags: ['Python', 'Agentic AI', 'Natural Language Processing'],
     github: "https://github.com/AryakumarMishra/AI-Research-Assistant",
-    live: null,
+    live: "https://ai-research-assistant-phi.vercel.app/",
   },
   {
     title: "FieldAssist AI",
