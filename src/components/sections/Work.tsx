@@ -7,6 +7,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { MouseLight } from "@/components/motion/MouseLight";
 import { MatrixMesh } from "@/components/ui/NeuralField";
 import { ProjectVisual } from "@/components/projects/ProjectVisual";
+import { ProjectLinks } from "@/components/projects/ProjectLinks";
 import { Button } from "@/components/ui/Button";
 import { easeOut } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -99,24 +100,7 @@ function ProjectCard({ project }: { project: Project }) {
           </div>
 
           <div className="mt-6 flex items-center gap-4">
-            {project.links.map((link, i) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="hover-reveal link-underline text-xs font-medium text-foreground-muted transition-colors duration-300 hover:text-foreground"
-                style={{
-                  transitionDelay: reduceMotion ? "0ms" : `${80 + i * 40}ms`,
-                }}
-                target={link.href.startsWith("http") ? "_blank" : undefined}
-                rel={
-                  link.href.startsWith("http")
-                    ? "noopener noreferrer"
-                    : undefined
-                }
-              >
-                {link.label}
-              </a>
-            ))}
+            <ProjectLinks links={project.links} reduceMotion={reduceMotion} />
           </div>
         </div>
 

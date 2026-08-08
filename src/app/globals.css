@@ -290,6 +290,20 @@ body {
   }
 }
 
+/* Touch devices (no hover): reveal project details by default */
+@media (hover: none) {
+  .hover-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+  }
+
+  .hover-reveal-tag {
+    border-color: var(--border);
+    background: var(--surface-inset-hover);
+  }
+}
+
 /* Timeline draw helper */
 .timeline-line {
   transform-origin: top center;
