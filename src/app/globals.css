@@ -1,26 +1,371 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────
+   Unified theme — dark only, single source of truth
+   ───────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+
+  /* Design system tokens */
+  --bg-base: #0D0E10;
+  --bg-gradient: radial-gradient(
+      circle at 20% 0%,
+      rgba(62, 207, 142, 0.08),
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 100%,
+      rgba(110, 110, 245, 0.06),
+      transparent 50%
+    ),
+    #0D0E10;
+  --surface: #17181C;
+  --surface-elevated: #1C1D22;
+  --border: rgba(255, 255, 255, 0.06);
+  --text-primary: #EDEDEF;
+  --text-secondary: #9A9AA2;
+  --text-muted: #6B6B74;
+  --accent: #3ECF8E;
+  --accent-glow: rgba(62, 207, 142, 0.15);
+  --radius: 14px;
+
+  /* Derived component tokens (aliases over the design system) */
+  --background: var(--bg-base);
+  --background-elevated: var(--surface-elevated);
+  --foreground: var(--text-primary);
+  --foreground-muted: var(--text-secondary);
+  --foreground-subtle: var(--text-muted);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  --card: rgba(23, 24, 28, 0.78);
+  --card-solid: var(--surface);
+  --surface-inset: rgba(255, 255, 255, 0.035);
+  --surface-inset-hover: rgba(255, 255, 255, 0.055);
+  --glass-bg: rgba(23, 24, 28, 0.72);
+  --glass-nav: rgba(23, 24, 28, 0.78);
+  --overlay: rgba(13, 14, 16, 0.92);
+  --selection: rgba(62, 207, 142, 0.28);
+  --focus-ring: rgba(62, 207, 142, 0.45);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 28px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0 24px 56px rgba(0, 0, 0, 0.5), 0 8px 20px rgba(0, 0, 0, 0.35);
+  --radius-card: var(--radius);
+  --radius-button: var(--radius);
+  --radius-input: var(--radius);
+
+  /* Ambient mesh — soft, low-alpha tints led by the teal accent */
+  --blob-blue: rgba(110, 140, 255, 0.22);
+  --blob-purple: rgba(160, 120, 255, 0.18);
+  --blob-pink: rgba(230, 140, 190, 0.14);
+  --blob-green: rgba(62, 207, 142, 0.18);
+  --hero-glow-a: rgba(62, 207, 142, 0.16);
+  --hero-glow-b: rgba(110, 110, 245, 0.1);
+  --vignette: rgba(13, 14, 16, 0.6);
+  --grain-opacity: 0.035;
+  --mouse-light: rgba(62, 207, 142, 0.12);
+  --media-chrome: rgba(255, 255, 255, 0.04);
+  --media-chrome-border: rgba(255, 255, 255, 0.08);
+  --badge-bg: rgba(23, 24, 28, 0.85);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-elevated: var(--background-elevated);
   --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-foreground-subtle: var(--foreground-subtle);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-card: var(--card);
+  --color-card-solid: var(--card-solid);
+  --color-surface-inset: var(--surface-inset);
+  --color-accent: var(--accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-hover: var(--shadow-hover);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body {
-  background: var(--background);
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--selection);
+  color: var(--foreground);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+/* Soft gradient mesh blobs — filter-free, compositor-only transform */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.45;
+  pointer-events: none;
+  will-change: transform;
+  transform: translateZ(0);
+  contain: layout paint;
+}
+
+.blob-blue {
+  background: radial-gradient(circle, var(--blob-blue) 0%, transparent 64%);
+}
+
+.blob-purple {
+  background: radial-gradient(circle, var(--blob-purple) 0%, transparent 64%);
+}
+
+.blob-pink {
+  background: radial-gradient(circle, var(--blob-pink) 0%, transparent 64%);
+}
+
+.blob-green {
+  background: radial-gradient(circle, var(--blob-green) 0%, transparent 64%);
+}
+
+/* Glass surfaces */
+.glass {
+  background: var(--glass-nav);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+}
+
+.glass-subtle {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border: 1px solid var(--border);
+}
+
+/* Premium card — GPU-friendly lift (transform + opacity only for motion) */
+.card-premium {
+  background: var(--card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-md);
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.4s ease;
+  transform: translateZ(0);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card-premium:hover {
+    transform: translate3d(0, -4px, 0);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--border-strong);
+  }
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Subtle grain */
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px 180px;
+}
+
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--foreground-subtle);
+}
+
+.link-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.link-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.media-frame {
+  overflow: hidden;
+  border-radius: 20px;
+  background: linear-gradient(
+    135deg,
+    var(--surface-inset) 0%,
+    var(--border) 100%
+  );
+  border: 1px solid var(--border);
+}
+
+/* Project card hover details — opacity/transform, no max-height thrash */
+.hover-reveal {
+  opacity: 0;
+  transform: translate3d(0, 6px, 0);
+  transition:
+    opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .group:hover .hover-reveal {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    pointer-events: auto;
+  }
+
+  .group:hover .hover-reveal-tag {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+.hover-reveal-tag {
+  opacity: 0.92;
+  transform: translate3d(0, 0, 0);
+  transition:
+    opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease,
+    background-color 0.3s ease;
+  will-change: transform, opacity;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .group:hover .hover-reveal-tag {
+    border-color: var(--border-strong);
+    background: var(--surface-inset-hover);
+  }
+}
+
+/* Timeline draw helper */
+.timeline-line {
+  transform-origin: top center;
+  will-change: transform;
+}
+
+/* Neural field pulses — compositor-driven opacity loops, no JS frames */
+@keyframes edge-pulse {
+  0%,
+  100% {
+    opacity: 0.22;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes node-pulse {
+  0%,
+  100% {
+    opacity: 0.28;
+  }
+  50% {
+    opacity: 0.65;
+  }
+}
+
+.edge-pulse {
+  animation: edge-pulse 9s ease-in-out infinite;
+  animation-delay: var(--pulse-delay, 0s);
+  animation-duration: var(--pulse-duration, 9s);
+}
+
+.node-pulse {
+  animation: node-pulse 6s ease-in-out infinite;
+  animation-delay: var(--pulse-delay, 0s);
+  animation-duration: var(--pulse-duration, 6s);
+}
+
+/* ─────────────────────────────────────────────
+   Lenis smooth scroll — recommended CSS
+   ───────────────────────────────────────────── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Reduced motion — kill decorative motion, keep core layout */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .card-premium:hover {
+    transform: none;
+  }
+
+  .hover-reveal {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
 }
