@@ -86,7 +86,7 @@ export function GradientBlobs() {
       />
 
       <motion.div
-        className="blob blob-green"
+        className="blob blob-indigo"
         style={{
           width: 320,
           height: 320,
@@ -103,7 +103,7 @@ export function GradientBlobs() {
               }
         }
         transition={{
-          duration: meshLoop.green,
+          duration: meshLoop.indigo,
           repeat: Infinity,
           ease: "easeInOut",
         }}

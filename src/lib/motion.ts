@@ -52,6 +52,6 @@ export const meshLoop = {
   blue: 48,
   purple: 56,
   pink: 42,
-  green: 60,
+  indigo: 60,
   hero: 36,
 };

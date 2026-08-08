@@ -10,7 +10,7 @@
   --bg-base: #0D0E10;
   --bg-gradient: radial-gradient(
       circle at 20% 0%,
-      rgba(62, 207, 142, 0.08),
+      rgba(78, 140, 255, 0.08),
       transparent 50%
     ),
     radial-gradient(
@@ -25,8 +25,8 @@
   --text-primary: #EDEDEF;
   --text-secondary: #9A9AA2;
   --text-muted: #6B6B74;
-  --accent: #3ECF8E;
-  --accent-glow: rgba(62, 207, 142, 0.15);
+  --accent: #4E8CFF;
+  --accent-glow: rgba(78, 140, 255, 0.15);
   --radius: 14px;
 
   /* Derived component tokens (aliases over the design system) */
@@ -43,8 +43,8 @@
   --glass-bg: rgba(23, 24, 28, 0.72);
   --glass-nav: rgba(23, 24, 28, 0.78);
   --overlay: rgba(13, 14, 16, 0.92);
-  --selection: rgba(62, 207, 142, 0.28);
-  --focus-ring: rgba(62, 207, 142, 0.45);
+  --selection: rgba(78, 140, 255, 0.28);
+  --focus-ring: rgba(78, 140, 255, 0.45);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
   --shadow-md: 0 4px 28px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.25);
   --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -53,16 +53,16 @@
   --radius-button: var(--radius);
   --radius-input: var(--radius);
 
-  /* Ambient mesh — soft, low-alpha tints led by the teal accent */
+  /* Ambient mesh — soft, low-alpha tints led by the blue accent */
   --blob-blue: rgba(110, 140, 255, 0.22);
   --blob-purple: rgba(160, 120, 255, 0.18);
   --blob-pink: rgba(230, 140, 190, 0.14);
-  --blob-green: rgba(62, 207, 142, 0.18);
-  --hero-glow-a: rgba(62, 207, 142, 0.16);
+  --blob-indigo: rgba(112, 120, 255, 0.18);
+  --hero-glow-a: rgba(78, 140, 255, 0.16);
   --hero-glow-b: rgba(110, 110, 245, 0.1);
   --vignette: rgba(13, 14, 16, 0.6);
   --grain-opacity: 0.035;
-  --mouse-light: rgba(62, 207, 142, 0.12);
+  --mouse-light: rgba(78, 140, 255, 0.12);
   --media-chrome: rgba(255, 255, 255, 0.04);
   --media-chrome-border: rgba(255, 255, 255, 0.08);
   --badge-bg: rgba(23, 24, 28, 0.85);
@@ -141,8 +141,8 @@ body {
   background: radial-gradient(circle, var(--blob-pink) 0%, transparent 64%);
 }
 
-.blob-green {
-  background: radial-gradient(circle, var(--blob-green) 0%, transparent 64%);
+.blob-indigo {
+  background: radial-gradient(circle, var(--blob-indigo) 0%, transparent 64%);
 }
 
 /* Glass surfaces */

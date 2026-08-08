@@ -51,7 +51,7 @@ export function MouseLight({
     mass: 0.3,
   });
 
-  const background = useMotionTemplate`radial-gradient(${size}px circle at ${x}% ${y}%, rgba(62,207,142,${0.16 * intensity}), transparent 55%)`;
+  const background = useMotionTemplate`radial-gradient(${size}px circle at ${x}% ${y}%, rgba(78,140,255,${0.16 * intensity}), transparent 55%)`;
 
   const onMove = useCallback(
     (e: MouseEvent<HTMLDivElement>) => {

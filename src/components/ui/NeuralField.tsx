@@ -108,12 +108,21 @@ export function MatrixMesh({ variant = "default" }: { variant?: string }) {
           }}
         />
       )}
-      {variant === "nlp" && (
+      {variant === "cv" && (
         <div
           className="absolute inset-0 opacity-[0.05]"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 20% 30%, rgba(99,140,255,0.25), transparent 40%), radial-gradient(circle at 80% 70%, rgba(140,120,255,0.15), transparent 35%)",
+              "repeating-linear-gradient(0deg, transparent, transparent 12px, rgba(255,120,140,0.07) 12px, rgba(255,120,140,0.07) 13px)",
+          }}
+        />
+      )}
+      {variant === "fraud" && (
+        <div
+          className="absolute inset-0 opacity-[0.05]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 70% 25%, rgba(255,110,120,0.18), transparent 42%), radial-gradient(circle at 20% 75%, rgba(120,120,255,0.16), transparent 40%)",
           }}
         />
       )}
@@ -123,6 +132,15 @@ export function MatrixMesh({ variant = "default" }: { variant?: string }) {
           style={{
             backgroundImage:
               "radial-gradient(circle at 50% 40%, rgba(168,130,255,0.3), transparent 45%)",
+          }}
+        />
+      )}
+      {variant === "rag" && (
+        <div
+          className="absolute inset-0 opacity-[0.05]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 30% 25%, rgba(120,190,255,0.28), transparent 45%), radial-gradient(circle at 75% 70%, rgba(90,140,255,0.16), transparent 40%)",
           }}
         />
       )}

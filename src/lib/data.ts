@@ -40,9 +40,10 @@ export type Project = {
   metric: string;
   status: string;
   flagship?: boolean;
+  featured?: boolean;
   metrics: ProjectMetric[];
   links: ProjectLink[];
-  visual: "security" | "nlp" | "ml" | "agent";
+  visual: "security" | "ml" | "agent" | "rag" | "cv" | "fraud";
 };
 
 export const projects: Project[] = [
@@ -63,6 +64,7 @@ export const projects: Project[] = [
     metric: "Flagship · AI Security",
     status: "In production",
     flagship: true,
+    featured: true,
     metrics: [
       { label: "Attack vectors", value: "30+" },
       { label: "Eval pipeline", value: "Automated" },
@@ -85,6 +87,7 @@ export const projects: Project[] = [
     accent: "from-blue-500/20 via-indigo-400/10 to-transparent",
     metric: "Agentic AI",
     status: "Built → To-be-Hosted",
+    featured: true,
     metrics: [
       { label: "Framework", value: "Google ADK" },
       { label: "Backend", value: "FastAPI" },
@@ -95,7 +98,7 @@ export const projects: Project[] = [
       { label: "Live", href: "#" },
       { label: "GitHub", href: "https://github.com/AryakumarMishra/Sentinel-AI" },
     ],
-    visual: "nlp",
+    visual: "agent",
   },
   {
     title: "FieldAssist AI",
@@ -104,11 +107,12 @@ export const projects: Project[] = [
     description:
       "An Offline-First, Air-Gapped RAG Engine for a legal knowledge base without any cloud or internet dependency",
     tags: ["Mistral", "Edge AI", "Streamlit", "Python"],
-    accent: "from-emerald-500/20 via-teal-400/10 to-transparent",
+    accent: "from-cyan-500/20 via-blue-500/10 to-transparent",
     metric: "Air-Gapped System",
     status: "Deployable · Works Without Internet",
+    featured: true,
     metrics: [
-      { label: "Model", value: "Mistal" },
+      { label: "Model", value: "Mistral 7B" },
       { label: "Constraint", value: "Air-Gapped" },
       { label: "UI", value: "Streamlit" },
       { label: "Status", value: "Complete" },
@@ -117,7 +121,73 @@ export const projects: Project[] = [
       { label: "Live", href: "#" },
       { label: "GitHub", href: "https://github.com/AryakumarMishra/FieldAssist-AI" },
     ],
+    visual: "rag",
+  },
+  {
+    title: "Deepfake Detection System",
+    category: "Computer Vision",
+    year: "2025",
+    description:
+      "A Multi-Modal Deepfake Detection System that can identify the Deepfakes and morphes in Images, Videos, and Audios.",
+    tags: ["Computer Vision", "Deepfake Detection", "PyTorch", "Transformers"],
+    accent: "from-blue-500/20 via-indigo-500/10 to-transparent",
+    metric: "Deepfake Detector",
+    status: "Complete",
+    metrics: [
+      { label: "Method", value: "Ensemble Model" },
+      { label: "Tools", value: "Computer Vision Models" },
+      { label: "Stack", value: "PyTorch" },
+      { label: "Accuracy", value: "Moderate" },
+    ],
+    links: [
+      { label: "Live", href: "https://multimodal-deepfake-detector.vercel.app/" },
+      { label: "GitHub", href: "https://github.com/AryakumarMishra/Multimodal-Deepfake-Detector" },
+    ],
+    visual: "cv",
+  },
+  {
+    title: "Predictive Maintenance Pipeline",
+    category: "ML Pipeline",
+    year: "2025",
+    description:
+      "Sensor telemetry turned into failure forecasts before downtime hits. An end-to-end pipeline from signal ingestion to a maintainable predictor in the field.",
+    tags: ["XGBoost", "Time Series", "Python", "Feature Engineering"],
+    accent: "from-sky-500/20 via-blue-400/10 to-transparent",
+    metric: "Predictive ML",
+    status: "Production-Minded",
+    metrics: [
+      { label: "Model", value: "XGBoost" },
+      { label: "Horizon", value: "14 days" },
+      { label: "Signal", value: "Sensor telemetry" },
+      { label: "Status", value: "Complete" },
+    ],
+    links: [
+      { label: "Live", href: "#" },
+      { label: "GitHub", href: "https://github.com/AryakumarMishra/Machine-Failure-Prediction" },
+    ],
     visual: "ml",
+  },
+  {
+    title: "Fraud Detector",
+    category: "ML Pipeline",
+    year: "2024",
+    description:
+      "This project is a high-performance, modular AI system that detects fraudulent credit card transactions using XGBoost and the model has been trained on real-world credit card transaction data and achieves an impressive performance.",
+    tags: ["XGBoost", "Anomaly Detection", "Imbalanced Data", "Python"],
+    accent: "from-indigo-500/20 via-violet-400/10 to-transparent",
+    metric: "XGBoost",
+    status: "Complete",
+    metrics: [
+      { label: "Model", value: "XGBoost" },
+      { label: "Signal", value: "0.99 F1" },
+      { label: "Topic", value: "Credit Card Fraud Detection" },
+      { label: "Status", value: "Complete" },
+    ],
+    links: [
+      { label: "Live", href: "#" },
+      { label: "GitHub", href: "https://github.com/AryakumarMishra/AI-Fraud-Detection" },
+    ],
+    visual: "fraud",
   },
 ];
 

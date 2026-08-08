@@ -6,153 +6,10 @@ import { Section, SectionHeader } from "@/components/ui/Section";
 import { Reveal } from "@/components/motion/Reveal";
 import { MouseLight } from "@/components/motion/MouseLight";
 import { MatrixMesh } from "@/components/ui/NeuralField";
+import { ProjectVisual } from "@/components/projects/ProjectVisual";
+import { Button } from "@/components/ui/Button";
 import { easeOut } from "@/lib/motion";
 import { cn } from "@/lib/utils";
-
-function ProjectVisual({ project }: { project: Project }) {
-  const chrome =
-    "absolute inset-6 flex flex-col rounded-2xl border p-4 shadow-sm backdrop-blur-sm sm:inset-8 sm:p-5 border-[var(--media-chrome-border)] bg-[var(--media-chrome)]";
-
-  if (project.visual === "security") {
-    return (
-      <div className={chrome}>
-        <div className="mb-3 flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-rose-400/50" />
-            <span className="h-1.5 w-1.5 rounded-full bg-foreground/10" />
-            <span className="h-1.5 w-1.5 rounded-full bg-foreground/10" />
-          </div>
-          <span className="rounded-full bg-surface-inset px-2 py-0.5 font-mono text-[9px] tracking-wide text-foreground-muted">
-            RED TEAM
-          </span>
-        </div>
-        <div className="space-y-2">
-          {[
-            { w: "72%", c: "bg-rose-400/30", l: "inject" },
-            { w: "48%", c: "bg-violet-400/30", l: "jailbreak" },
-            { w: "91%", c: "bg-emerald-400/30", l: "eval pass" },
-          ].map((row) => (
-            <div key={row.l} className="flex items-center gap-2">
-              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-inset">
-                <div
-                  className={cn("h-full rounded-full", row.c)}
-                  style={{ width: row.w }}
-                />
-              </div>
-              <span className="font-mono text-[9px] text-foreground-subtle">
-                {row.l}
-              </span>
-            </div>
-          ))}
-        </div>
-        <div className="mt-auto grid grid-cols-4 gap-1.5 pt-4">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-6 rounded-md bg-background-elevated/60 shadow-sm"
-              style={{ opacity: 0.4 + (i % 3) * 0.2 }}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (project.visual === "nlp") {
-    return (
-      <div className={chrome}>
-        <div className="mb-4 flex items-center gap-1.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-blue-400/50" />
-          <span className="h-1.5 w-1.5 rounded-full bg-foreground/10" />
-          <span className="h-1.5 w-1.5 rounded-full bg-foreground/10" />
-        </div>
-        <div className="space-y-2">
-          <div className="h-2 w-4/5 rounded-full bg-surface-inset" />
-          <div className="h-2 w-3/5 rounded-full bg-surface-inset" />
-          <div className="h-2 w-2/3 rounded-full bg-surface-inset" />
-        </div>
-        <div className="mt-5 flex gap-2">
-          <div className="flex-1 rounded-xl border border-border bg-background-elevated/70 p-2.5 shadow-sm">
-            <div className="font-mono text-[9px] text-foreground-subtle">
-              RoBERTa
-            </div>
-            <div className="mt-1 text-xs font-semibold text-foreground">
-              0.94 F1
-            </div>
-          </div>
-          <div className="flex-1 rounded-xl border border-border bg-background-elevated/50 p-2.5 shadow-sm">
-            <div className="font-mono text-[9px] text-foreground-subtle">
-              Sentiment
-            </div>
-            <div className="mt-1 text-xs font-semibold text-foreground">
-              Enhanced
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (project.visual === "ml") {
-    return (
-      <div className={chrome}>
-        <div className="mb-4 flex items-center gap-1.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/50" />
-          <span className="h-1.5 w-1.5 rounded-full bg-foreground/10" />
-          <span className="h-1.5 w-1.5 rounded-full bg-foreground/10" />
-        </div>
-        <div className="flex flex-1 items-end gap-1.5 pb-1">
-          {[40, 65, 45, 80, 55, 90, 70, 85, 60, 95].map((h, i) => (
-            <div
-              key={i}
-              className="flex-1 rounded-t-sm bg-emerald-500/20"
-              style={{ height: `${h}%` }}
-            />
-          ))}
-        </div>
-        <div className="mt-3 flex items-center justify-between">
-          <span className="font-mono text-[9px] text-foreground-subtle">
-            failure risk · 14d horizon
-          </span>
-          <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[9px] font-medium text-[var(--accent)]">
-            XGBoost
-          </span>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className={chrome}>
-      <div className="mb-4 flex items-center gap-1.5">
-        <span className="h-1.5 w-1.5 rounded-full bg-violet-400/50" />
-        <span className="h-1.5 w-1.5 rounded-full bg-foreground/10" />
-        <span className="h-1.5 w-1.5 rounded-full bg-foreground/10" />
-      </div>
-      <div className="grid flex-1 grid-cols-3 gap-2">
-        {["Retrieve", "Reason", "Act"].map((step, i) => (
-          <div
-            key={step}
-            className="flex flex-col items-center justify-center rounded-xl border border-border bg-background-elevated/60 p-2 shadow-sm"
-          >
-            <span className="font-mono text-[8px] text-foreground-subtle">
-              0{i + 1}
-            </span>
-            <span className="mt-1 text-[10px] font-medium text-foreground">
-              {step}
-            </span>
-          </div>
-        ))}
-      </div>
-      <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-surface-inset">
-        <div className="h-full w-2/3 rounded-full bg-violet-400/35" />
-      </div>
-      <span className="mt-2 font-mono text-[9px] text-foreground-subtle">
-        multi-agent · grounded RAG
-      </span>
-    </div>
-  );
-}
 
 function ProjectCard({ project }: { project: Project }) {
   const reduceMotion = useReducedMotion();
@@ -282,6 +139,8 @@ function ProjectCard({ project }: { project: Project }) {
 }
 
 export function Work() {
+  const featured = projects.filter((project) => project.featured);
+
   return (
     <Section
       id="work"
@@ -296,10 +155,27 @@ export function Work() {
       </Reveal>
 
       <div className="mt-4 grid gap-4 sm:mt-6 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
-        {projects.map((project) => (
+        {featured.map((project) => (
           <ProjectCard key={project.title} project={project} />
         ))}
       </div>
+
+      <Reveal delay={0.15} className="mt-10 flex justify-center sm:mt-12">
+        <Button
+          href="/projects"
+          variant="secondary"
+          size="lg"
+          className="group"
+        >
+          View All Projects
+          <span
+            aria-hidden
+            className="transition-transform duration-300 group-hover:translate-x-1"
+          >
+            →
+          </span>
+        </Button>
+      </Reveal>
     </Section>
   );
 }
