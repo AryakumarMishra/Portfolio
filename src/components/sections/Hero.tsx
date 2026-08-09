@@ -1,121 +1,69 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { focusAreas, siteConfig } from "@/lib/data";
-import { Button } from "@/components/ui/Button";
-import { Section } from "@/components/ui/Section";
-import { HeroGlow } from "@/components/ui/GradientBlobs";
-import { NeuralField } from "@/components/ui/NeuralField";
+import { Panel } from "@/components/sections/Panel";
+import { hero, siteConfig } from "@/lib/data";
 import { easeOut } from "@/lib/motion";
+
+const container = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.14,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 26 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: easeOut },
+  },
+};
 
 export function Hero() {
   const reduceMotion = useReducedMotion();
 
-  const container = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.11,
-        delayChildren: 0.15,
-      },
-    },
-  };
-
-  const item = {
-    hidden: reduceMotion
-      ? { opacity: 1, y: 0 }
-      : { opacity: 0, y: 24 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.85,
-        ease: easeOut,
-      },
-    },
-  };
-
   return (
-    <Section
-      id="top"
-      className="relative flex min-h-[100svh] items-center pb-20 pt-32 sm:pb-28 sm:pt-36"
-    >
-      <HeroGlow />
-      <NeuralField className="opacity-80" />
+    <Panel id="hero" className="grain overflow-hidden bg-obsidian">
+      <div className="absolute right-6 top-24 z-10 flex items-center gap-2 sm:right-8">
+        <span className="h-[6px] w-[6px] rounded-full bg-brass" aria-hidden="true" />
+        <span
+          className="text-[11px] uppercase tracking-[0.18em] text-bone-white-faint"
+          style={{ fontFamily: "var(--font-ibm-plex-mono)" }}
+        >
+          STATUS: {siteConfig.status}
+        </span>
+      </div>
 
       <motion.div
-        className="relative mx-auto max-w-4xl text-center"
         variants={container}
-        initial="hidden"
+        initial={reduceMotion ? false : "hidden"}
         animate="visible"
+        className="pb-24 pt-32 sm:pb-28"
       >
-        <motion.div variants={item} className="mb-8 flex justify-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-background-elevated/70 px-3.5 py-1.5 text-xs font-medium text-foreground-muted shadow-sm backdrop-blur-md">
-            <span className="relative flex h-1.5 w-1.5">
-              {!reduceMotion && (
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--accent)] opacity-40" />
-              )}
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
-            </span>
-            {siteConfig.availability}
-          </span>
-        </motion.div>
-
-        <motion.p
-          variants={item}
-          className="mb-5 text-sm font-medium tracking-wide text-foreground-muted sm:text-[15px]"
-        >
-          {siteConfig.role} · Machine Learning · LLM Systems
-        </motion.p>
-
         <motion.h1
           variants={item}
-          className="text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-[4.25rem] lg:leading-[1.08]"
+          className="text-balance text-[clamp(3rem,9vw,6.5rem)] font-semibold leading-[1.02] tracking-[-0.02em] text-bone-white"
         >
-          Engineering intelligence
-          <br className="hidden sm:block" />{" "}
-          <span className="text-foreground-muted">into real products.</span>
+          {siteConfig.name}
         </motion.h1>
 
         <motion.p
           variants={item}
-          className="mx-auto mt-7 max-w-2xl text-pretty text-base leading-relaxed text-foreground-muted sm:mt-8 sm:text-lg sm:leading-relaxed"
+          className="mt-8 max-w-2xl text-pretty text-[clamp(1.25rem,2.6vw,1.75rem)] leading-snug text-bone-white-soft"
         >
-          I build AI that does real work: production ML pipelines, LLM
-          applications, security tooling for models, and the backends that
-          quietly hold it all together. From experiment to infrastructure -
-          most of the fun is in the last mile.
+          An AI engineer who builds the{" "}
+          <em className="font-serif italic text-brass">
+            {hero.accentWord}
+          </em>
+          {" - LLMs, retrieval, agents - and knows how to make them hold up "}
+          under pressure.
         </motion.p>
-
-        <motion.div
-          variants={item}
-          className="mt-10 flex flex-col items-center justify-center gap-3 sm:mt-12 sm:flex-row sm:gap-4"
-        >
-          <Button href="#work" variant="primary" size="lg">
-            View Projects
-          </Button>
-          <Button href="#stack" variant="secondary" size="lg">
-            View tech stack
-          </Button>
-        </motion.div>
-
-        <motion.div
-          variants={item}
-          className="mt-16 flex flex-wrap items-center justify-center gap-x-5 gap-y-2.5 text-xs font-medium tracking-wide text-foreground-subtle sm:mt-20 sm:gap-x-6 sm:text-[13px]"
-        >
-          {focusAreas.map((area, i) => (
-            <span
-              key={area}
-              className="inline-flex items-center gap-5 sm:gap-6"
-            >
-              {i > 0 && (
-                <span className="hidden h-1 w-1 rounded-full bg-foreground-subtle/50 sm:inline-block" />
-              )}
-              <span>{area}</span>
-            </span>
-          ))}
-        </motion.div>
       </motion.div>
-    </Section>
+    </Panel>
   );
 }

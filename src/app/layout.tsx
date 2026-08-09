@@ -1,49 +1,66 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
+import { IBM_Plex_Mono, Instrument_Serif } from "next/font/google";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { ToastProvider } from "@/components/ui/Toast";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const generalSans = localFont({
+  src: [
+    { path: "../fonts/general-sans-400.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/general-sans-500.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/general-sans-600.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/general-sans-700.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-general-sans",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const instrumentSerif = Instrument_Serif({
+  weight: "400",
+  style: "italic",
   subsets: ["latin"],
+  variable: "--font-instrument-serif",
+  display: "swap",
+});
+
+const ibmPlexMono = IBM_Plex_Mono({
+  weight: ["400", "500"],
+  subsets: ["latin"],
+  variable: "--font-ibm-plex-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "Aryakumar Mishra — AI Systems Engineer",
+    default: "Aryakumar Mishra — LLM Systems & Adversarial AI",
     template: "%s — Aryakumar Mishra",
   },
   description:
-    "AI Systems Engineer building ML pipelines, LLM applications, AI security tooling, and the backends that ship them to real users.",
+    "AI/ML engineer working on LLM systems, RAG pipelines, agentic AI, and AI security — building them, then stress-testing them before they ship.",
   keywords: [
-    "AI engineer",
-    "machine learning engineer",
-    "LLM applications",
-    "AI security",
-    "MLOps",
-    "RAG",
-    "PyTorch",
     "Aryakumar Mishra",
+    "AI engineer",
+    "LLM systems",
+    "adversarial AI",
+    "AI security",
+    "RAG",
+    "agentic AI",
+    "red teaming",
+    "Mumbai",
   ],
   authors: [{ name: "Aryakumar Mishra" }],
   openGraph: {
-    title: "Aryakumar Mishra — AI Systems Engineer",
+    title: "Aryakumar Mishra — LLM Systems & Adversarial AI",
     description:
-      "AI systems that make it out of the notebook and into production.",
+      "I build the systems. I also break them — on purpose.",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Aryakumar Mishra — AI Systems Engineer",
-    description:
-      "AI systems that make it out of the notebook and into production.",
+    title: "Aryakumar Mishra — LLM Systems & Adversarial AI",
+    description: "I build the systems. I also break them — on purpose.",
   },
   robots: {
     index: true,
@@ -59,9 +76,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${generalSans.variable} ${instrumentSerif.variable} ${ibmPlexMono.variable}`}
     >
-      <body className="min-h-full bg-background font-sans text-foreground antialiased">
+      <body className="min-h-screen bg-obsidian font-sans text-bone-white antialiased">
         <SmoothScroll>
           <ToastProvider>{children}</ToastProvider>
         </SmoothScroll>

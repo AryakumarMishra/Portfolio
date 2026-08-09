@@ -1,25 +1,22 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { GradientBlobs } from "@/components/ui/GradientBlobs";
+import { StackedPanels } from "@/components/motion/StackedPanels";
 import { Hero } from "@/components/sections/Hero";
-import { Work } from "@/components/sections/Work";
-import { About } from "@/components/sections/About";
-import { Stack } from "@/components/sections/Stack";
-import { Experience } from "@/components/sections/Experience";
+import { FeaturedProjects } from "@/components/sections/FeaturedProjects";
+import { Toolkit } from "@/components/sections/Toolkit";
 import { Contact } from "@/components/sections/Contact";
 
 export default function Home() {
   return (
-    <div className="grain relative min-h-screen">
-      <GradientBlobs />
+    <div className="relative min-h-screen bg-obsidian">
       <Navbar />
       <main>
-        <Hero />
-        <Work />
-        <About />
-        <Stack />
-        <Experience />
-        <Contact />
+        <StackedPanels pinCount={3}>
+          <Hero />
+          <FeaturedProjects />
+          <Toolkit />
+          <Contact />
+        </StackedPanels>
       </main>
       <Footer />
     </div>

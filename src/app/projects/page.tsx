@@ -1,22 +1,32 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { GradientBlobs } from "@/components/ui/GradientBlobs";
-import { ProjectsSection } from "@/components/sections/ProjectsSection";
+import { StackedPanels } from "@/components/motion/StackedPanels";
+import { ProjectSection } from "@/components/projects/ProjectSection";
+import { ProjectsIntro } from "@/components/projects/ProjectsIntro";
+import { projects } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Projects",
   description:
-    "All of Aryakumar Mishra's AI systems — LLM security, agentic AI, offline RAG, predictive ML, and NLP pipelines.",
+    "A selection of systems Aryakumar Mishra has built — LLM red-teaming, agentic DevOps, air-gapped RAG, and computer-vision tooling.",
 };
 
 export default function ProjectsPage() {
   return (
-    <div className="grain relative min-h-screen">
-      <GradientBlobs />
+    <div className="relative min-h-screen bg-obsidian">
       <Navbar />
       <main>
-        <ProjectsSection />
+        <StackedPanels pinCount={6}>
+          <ProjectsIntro />
+          {projects.map((project, i) => (
+            <ProjectSection
+              key={project.id}
+              project={project}
+              tone={i % 2 === 0 ? "bone" : "obsidian"}
+            />
+          ))}
+        </StackedPanels>
       </main>
       <Footer />
     </div>
