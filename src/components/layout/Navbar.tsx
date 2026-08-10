@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   AnimatePresence,
@@ -20,44 +14,21 @@ import { useLenis } from "lenis/react";
 import { navLinks, siteConfig } from "@/lib/data";
 import { easeOut } from "@/lib/motion";
 
-const desktopQuery = () => window.matchMedia("(min-width: 640px)");
-
-function subscribeDesktop(callback: () => void) {
-  const mq = desktopQuery();
-  mq.addEventListener("change", callback);
-  window.addEventListener("resize", callback);
-  return () => {
-    mq.removeEventListener("change", callback);
-    window.removeEventListener("resize", callback);
-  };
-}
-
-function getDesktopSnapshot() {
-  return desktopQuery().matches;
-}
-
-function getServerSnapshot() {
-  return true;
-}
-
 /**
  * Navbar morph: at the top of the page the links sit centered. As the first
  * pinned section transition progresses (scrollY spanning one viewport), the
  * name fades in on the left and the links glide to the right — one
  * coordinated motion driven by the same scroll value.
  *
- * On mobile, once scrolled, the centered links give way to a hamburger that
- * opens an animated full-screen menu.
+ * On mobile the centered links cross-fade out on scroll, a hamburger appears
+ * on the right, and it opens a full-screen menu overlay.
  */
 export function Navbar() {
   const reduceMotion = useReducedMotion();
-  const isDesktop = useSyncExternalStore(
-    subscribeDesktop,
-    getDesktopSnapshot,
-    getServerSnapshot
-  );
   const containerRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
+  const burgerRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const [bounds, setBounds] = useState({ centered: 0, right: 0 });
   const [menuOpen, setMenuOpen] = useState(false);
   const lenis = useLenis();
@@ -75,11 +46,15 @@ export function Navbar() {
   );
   const nameX = useTransform(smooth, (p) => -10 * (1 - Math.min(p * 3, 1)));
   const nameOpacity = useTransform(smooth, (p) => Math.min(p * 3, 1));
-  const mobileNavOpacity = useTransform(smooth, (p) => (p > 0.04 ? 0 : 1));
-  const mobileNavPointer = useTransform(smooth, (p) =>
-    p > 0.04 ? "none" : "auto"
+
+  const mobileLinksOpacity = useTransform(smooth, [0.12, 0.42], [1, 0]);
+  const mobileLinksPointer = useTransform(smooth, (p) =>
+    p > 0.3 ? "none" : "auto"
   );
-  const hamburgerOpacity = useTransform(smooth, (p) => (p > 0.04 ? 1 : 0));
+  const burgerOpacity = useTransform(smooth, [0.12, 0.42], [0, 1]);
+  const burgerPointer = useTransform(smooth, (p) =>
+    p > 0.3 ? "auto" : "none"
+  );
 
   useLayoutEffect(() => {
     const measure = () => {
@@ -110,54 +85,71 @@ export function Navbar() {
   }, [morph]);
 
   useEffect(() => {
-    if (isDesktop) setMenuOpen(false);
-  }, [isDesktop]);
-
-  useEffect(() => {
     if (!menuOpen) return;
     lenis?.stop();
     const prevOverflow = document.documentElement.style.overflow;
     document.documentElement.style.overflow = "hidden";
+    closeRef.current?.focus();
+
     const onKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key === "Escape") setMenuOpen(false);
     };
     window.addEventListener("keydown", onKeyDown);
+
     return () => {
       lenis?.start();
       document.documentElement.style.overflow = prevOverflow;
       window.removeEventListener("keydown", onKeyDown);
+      burgerRef.current?.focus();
     };
   }, [menuOpen, lenis]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border-b border-brass/25 bg-obsidian/90 backdrop-blur-sm">
-      <div
-        ref={containerRef}
-        className="relative mx-auto flex h-16 max-w-7xl items-center px-6 sm:px-8"
-      >
-        <motion.div
-          style={{ x: nameX, opacity: nameOpacity }}
-          className="absolute inset-y-0 left-6 flex items-center sm:left-8"
+    <>
+      <header className="fixed inset-x-0 top-0 z-40 border-b border-brass/25 bg-obsidian/90 backdrop-blur-sm">
+        <div
+          ref={containerRef}
+          className="relative mx-auto flex h-16 max-w-7xl items-center px-6 sm:px-8"
         >
-          <Link
-            href="/"
-            aria-label="Aryakumar Mishra — home"
-            className="text-[15px] font-medium tracking-tight text-bone-white transition-colors duration-300 hover:text-brass"
+          <motion.div
+            style={{ x: nameX, opacity: nameOpacity }}
+            className="absolute inset-y-0 left-6 flex items-center sm:left-8"
           >
-            {siteConfig.name}
-          </Link>
-        </motion.div>
+            <Link
+              href="/"
+              aria-label="Aryakumar Mishra — home"
+              className="text-[15px] font-medium tracking-tight text-bone-white transition-colors duration-300 hover:text-brass"
+            >
+              {siteConfig.name}
+            </Link>
+          </motion.div>
 
-        <div className="absolute inset-y-0 left-0 flex items-center">
+          {/* Desktop: centered at top, glides right on scroll */}
+          <div className="absolute inset-y-0 left-0 hidden items-center md:flex">
+            <motion.nav
+              ref={navRef}
+              style={{ x: navX }}
+              aria-label="Primary"
+              className="flex items-center gap-6 sm:gap-8"
+            >
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-[11px] uppercase tracking-[0.18em] text-bone-white-soft transition-colors duration-300 hover:text-brass"
+                  style={{ fontFamily: "var(--font-ibm-plex-mono)" }}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </motion.nav>
+          </div>
+
+          {/* Mobile: centered links that cross-fade to the hamburger on scroll */}
           <motion.nav
-            ref={navRef}
+            style={{ opacity: mobileLinksOpacity, pointerEvents: mobileLinksPointer }}
             aria-label="Primary"
-            style={{
-              x: navX,
-              opacity: isDesktop ? undefined : mobileNavOpacity,
-              pointerEvents: isDesktop ? undefined : mobileNavPointer,
-            }}
-            className="flex items-center gap-6 sm:gap-8"
+            className="absolute inset-0 flex items-center justify-center gap-6 md:hidden"
           >
             {navLinks.map((link) => (
               <Link
@@ -170,48 +162,56 @@ export function Navbar() {
               </Link>
             ))}
           </motion.nav>
-        </div>
 
-        <motion.button
-          type="button"
-          aria-label="Open menu"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen(true)}
-          style={{
-            opacity: isDesktop ? 0 : hamburgerOpacity,
-            pointerEvents: isDesktop ? "none" : undefined,
-          }}
-          className="absolute inset-y-0 right-6 flex cursor-pointer items-center"
-        >
-          <span className="flex flex-col gap-[6px]" aria-hidden="true">
-            <span className="h-px w-6 bg-bone-white" />
-            <span className="h-px w-4 self-end bg-bone-white" />
-          </span>
-        </motion.button>
-      </div>
+          <motion.button
+            ref={burgerRef}
+            type="button"
+            onClick={() => setMenuOpen(true)}
+            aria-label="Open menu"
+            aria-expanded={menuOpen}
+            style={{ opacity: burgerOpacity, pointerEvents: burgerPointer }}
+            className="absolute inset-y-0 right-6 flex items-center text-bone-white transition-colors duration-300 hover:text-brass sm:right-8 md:hidden"
+          >
+            <span className="relative block h-[10px] w-[18px]" aria-hidden="true">
+              <span className="absolute left-0 top-0 h-px w-full bg-current" />
+              <span className="absolute bottom-0 left-0 h-px w-full bg-current" />
+            </span>
+          </motion.button>
+        </div>
+      </header>
 
       <AnimatePresence>
-        {!isDesktop && menuOpen && (
+        {menuOpen && (
           <motion.div
-            key="mobile-menu"
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={reduceMotion ? { duration: 0 } : { duration: 0.3 }}
-            className="fixed inset-0 z-50 flex flex-col bg-obsidian"
+            className="fixed inset-0 z-50 flex flex-col bg-obsidian/85 backdrop-blur-lg md:hidden"
+            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+            animate={
+              reduceMotion ? { opacity: 1 } : { opacity: 1, clipPath: "inset(0 0 0% 0)" }
+            }
+            exit={
+              reduceMotion
+                ? { opacity: 0 }
+                : { opacity: 0, clipPath: "inset(0 0 100% 0)", transition: { duration: 0.35, ease: easeOut } }
+            }
+            transition={reduceMotion ? { duration: 0 } : { duration: 0.5, ease: easeOut }}
           >
-            <div className="flex h-16 items-center justify-between border-b border-brass/25 px-6">
-              <span className="text-[15px] font-medium tracking-tight text-bone-white">
-                {siteConfig.name}
-              </span>
-              <button
-                type="button"
-                aria-label="Close menu"
+            <div className="relative z-10 flex h-16 items-center justify-between border-b border-brass/25 px-6 sm:px-8">
+              <Link
+                href="/"
                 onClick={() => setMenuOpen(false)}
-                className="cursor-pointer text-bone-white-faint transition-colors duration-300 hover:text-brass"
+                className="text-[15px] font-medium tracking-tight text-bone-white transition-colors duration-300 hover:text-brass"
+              >
+                {siteConfig.name}
+              </Link>
+              <button
+                ref={closeRef}
+                type="button"
+                onClick={() => setMenuOpen(false)}
+                aria-label="Close menu"
+                className="text-bone-white transition-colors duration-300 hover:text-brass"
               >
                 <svg
                   width="18"
@@ -227,61 +227,70 @@ export function Navbar() {
               </button>
             </div>
 
-            <nav aria-label="Mobile" className="flex flex-1 flex-col justify-center gap-3 px-6">
+            <nav
+              aria-label="Primary"
+              className="relative z-10 flex flex-1 flex-col items-start justify-center gap-1 px-6 sm:px-8"
+            >
               {navLinks.map((link, i) => (
                 <motion.div
                   key={link.href}
                   initial={{ opacity: 0, y: 18 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 12 }}
-                  transition={{
-                    duration: 0.45,
-                    ease: easeOut,
-                    delay: reduceMotion ? 0 : 0.06 * (i + 1),
-                  }}
+                  transition={
+                    reduceMotion
+                      ? { duration: 0 }
+                      : { duration: 0.5, ease: easeOut, delay: 0.08 + i * 0.07 }
+                  }
                 >
                   <Link
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
-                    className="block py-1 text-[clamp(1.75rem,8vw,2.5rem)] font-semibold tracking-[-0.01em] text-bone-white transition-colors duration-300 hover:text-brass"
+                    className="group flex items-baseline gap-4 py-2 text-[clamp(2.25rem,9vw,3rem)] font-semibold tracking-[-0.015em] text-bone-white transition-colors duration-300 hover:text-brass"
                   >
+                    <span
+                      className="text-[12px] tracking-[0.18em] text-brass"
+                      style={{ fontFamily: "var(--font-ibm-plex-mono)" }}
+                    >
+                      0{i + 1}
+                    </span>
                     {link.label}
                   </Link>
                 </motion.div>
               ))}
             </nav>
 
-            <div className="border-t border-brass/25 px-6 pb-10 pt-6">
-              <p
-                className="text-[12px] uppercase tracking-[0.16em] text-bone-white-faint"
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={reduceMotion ? { duration: 0 } : { duration: 0.5, ease: easeOut, delay: 0.32 }}
+              className="relative z-10 flex flex-wrap items-center gap-x-6 gap-y-3 px-6 pb-12 sm:px-8"
+            >
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="text-[12px] uppercase tracking-[0.14em] text-bone-white-soft transition-colors duration-300 hover:text-brass"
                 style={{ fontFamily: "var(--font-ibm-plex-mono)" }}
               >
                 {siteConfig.email}
-              </p>
-              <div className="mt-4 flex gap-6">
+              </a>
+              {[
+                { label: "GitHub", href: siteConfig.social.github },
+                { label: "LinkedIn", href: siteConfig.social.linkedin },
+              ].map((link) => (
                 <a
-                  href={siteConfig.social.github}
+                  key={link.label}
+                  href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="link-underline text-[12px] uppercase tracking-[0.16em] text-bone-white-soft"
+                  className="text-[12px] uppercase tracking-[0.14em] text-bone-white-faint transition-colors duration-300 hover:text-brass"
                   style={{ fontFamily: "var(--font-ibm-plex-mono)" }}
                 >
-                  GitHub ↗
+                  {link.label} ↗
                 </a>
-                <a
-                  href={siteConfig.social.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="link-underline text-[12px] uppercase tracking-[0.16em] text-bone-white-soft"
-                  style={{ fontFamily: "var(--font-ibm-plex-mono)" }}
-                >
-                  LinkedIn ↗
-                </a>
-              </div>
-            </div>
+              ))}
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
