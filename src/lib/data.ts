@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Aryakumar Mishra",
-  roleLine: "AI/ML Engineer — LLM Systems & Adversarial AI",
+  roleLine: "AI/ML Engineer | AI Systems Engineer",
   status: "Open to work",
   email: "aryakumar.ajaymishra@gmail.com",
   location: "Mumbai, India",
@@ -12,7 +12,7 @@ export const siteConfig = {
 
 export const hero = {
   subline:
-    "An AI engineer who builds the systems — LLMs, retrieval, agents — and knows how to make them hold up under pressure.",
+    "An AI engineer who builds the systems - LLMs, retrieval, agents - and knows how to make them hold up under pressure.",
   accentWord: "systems",
 };
 
