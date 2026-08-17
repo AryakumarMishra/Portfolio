@@ -47,7 +47,7 @@ export const projects: Project[] = [
     ],
     stack: ["FastAPI", "LiteLLM", "React"],
     github: "https://github.com/AryakumarMishra/RedVector",
-    live: "https://red-vector.vercel.app/",
+    live: "https://redvector.vercel.app/",
   },
   {
     id: "sentinel",
