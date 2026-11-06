@@ -115,7 +115,7 @@ export const projects: Project[] = [
     number: "P·04",
     id: "sentinel-ai",
     name: "Sentinel AI",
-    title: "Sentinel AI — Agentic DevOps Pipeline",
+    title: "Sentinel AI - Agentic DevOps Pipeline",
     description:
       "An autonomous agentic DevOps pipeline — self-healing CI/CD orchestration.",
     stack: ["FastAPI", "Next.js", "Google ADK", "Gemini"],
@@ -135,7 +135,7 @@ export const projects: Project[] = [
     number: "P·05",
     id: "deepfake-detector",
     name: "Deepfake Detector",
-    title: "Deepfake Detector — Multi-Modal Detection System",
+    title: "Deepfake Detector - Multi-Modal Detection System",
     description:
       "A multi-modal deepfake detection system that identifies deepfakes and morphs in images, videos, and audio.",
     stack: ["FastAPI", "React", "Transformer", "ResNet", "Ensemble"],
@@ -155,7 +155,7 @@ export const projects: Project[] = [
     number: "P·06",
     id: "machine-failure",
     name: "Machine Failure Prediction",
-    title: "Machine Failure Prediction — Predictive Maintenance",
+    title: "Machine Failure Prediction - Predictive Maintenance",
     description:
       "A machine-learning system that predicts potential equipment failures using operational sensor data.",
     stack: ["Python", "XGBoost", "Scikit-learn", "SMOTE", "Streamlit"],
