@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <text x="30" y="46" font-family="ui-monospace, 'SF Mono', monospace" font-size="42" font-weight="500" text-anchor="middle" fill="#F5F4EF">a</text>
+  <circle cx="51" cy="14" r="6" fill="#C8F169"/>
+</svg>

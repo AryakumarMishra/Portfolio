@@ -1,26 +1,193 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-charcoal: var(--charcoal);
+  --color-charcoal-soft: var(--charcoal-soft);
+  --color-ivory: var(--ivory);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument-serif), Georgia, serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --text-fluid-4xl: clamp(2.75rem, 1.4rem + 6.5vw, 6.5rem);
+  --text-fluid-3xl: clamp(2rem, 1.2rem + 4vw, 4rem);
+  --text-fluid-2xl: clamp(1.5rem, 1.1rem + 2.2vw, 2.625rem);
+  --text-fluid-xl: clamp(1.1875rem, 1rem + 1vw, 1.5rem);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  color-scheme: light;
+  --paper: #f5f4ef;
+  --paper-deep: #eeede6;
+  --ink: #171816;
+  --ink-soft: #777872;
+  --line: #dcdcd4;
+  --accent: #c8f169;
+  --charcoal: #20221f;
+  --charcoal-soft: #6b6f66;
+  --ivory: #f5f4ef;
+  --container: 1200px;
+  --gutter: 1.375rem;
+
+  @media (min-width: 768px) {
+    --gutter: 2.5rem;
+  }
+}
+
+.dark {
+  color-scheme: dark;
+  --paper: #161713;
+  --paper-deep: #1c1e18;
+  --ink: #e9e7de;
+  --ink-soft: #9a9c90;
+  --line: #34362e;
+  --accent: #c8f169;
+  --charcoal: #0d0e0b;
+  --charcoal-soft: #8b8d81;
+  --ivory: #e9e7de;
+}
+
+/* Theme ripple via View Transitions */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--accent);
+  color: #171816;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
+}
+
+.container-x {
+  width: 100%;
+  max-width: calc(var(--container) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+@media (min-width: 1024px) {
+  .container-x {
+    width: 86%;
+    max-width: 1720px;
+    padding-inline: 0;
+  }
+}
+
+.font-display {
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+.link-underline {
+  position: relative;
+}
+
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.rule-grid {
+  background-image: linear-gradient(var(--color-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+}
+
+@keyframes pulse-dot {
+  0% {
+    box-shadow: 0 0 0 0 rgba(154, 189, 47, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(154, 189, 47, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(154, 189, 47, 0);
+  }
+}
+
+.availability-dot {
+  animation: pulse-dot 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .availability-dot {
+    animation: none;
+  }
+}
+
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
 }
